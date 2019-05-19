@@ -7,7 +7,7 @@ A [single ZIP file](https://github.com/julian-urbano/sigir2019-standardization/m
 ## Project Structure
 
 * `data/` Input data files.
-* `output/` Generated output files.
+* `out/` Generated output files.
 * `R/` Source code in R.
 * `scratch/` Temporary files generated in the process.
 
@@ -19,22 +19,22 @@ The source files in `R/` need to be run in order. You can run each file individu
 
 **It is important that you always run from the base directory**.
 
-1. `R/01-within.R` fits all the marginal distributions (section 4.1).
-2. `R/02-between.R` transforms all distributtions fitted in step 1 to have the same expected value as in the original data (section 4.1).
+1. `R/01-within.R` computes all statistics for within-collection comparisons (section 3.1).
+2. `R/02-between.R` computes all statistics for between-collection comparisons (section 3.2).
 7. `R/99-paper.R` generates all figures in the paper and stores them in `out/figs/`.
 
-It takes several days to run all the code, so it is ready to run in parallel. Most of the above code parallelizes using function `foreach` in R's package [`doParallel`](https://cran.r-project.org/web/packages/doParallel/index.html). In particular, it will use all available cores in the machine. Check the individual code files to modify this behavior.
+It takes a long time to run all the code, so it is ready to run in parallel. Most of the above code parallelizes using function `foreach` in R's package [`doParallel`](https://cran.r-project.org/web/packages/doParallel/index.html). In particular, it will use all available cores in the machine. Edit file `R/common.R` to modify this behavior and other parameters.
 
 ## Custom test collections
 
-You can easily run the code with your own initial test collection. Add the matrix of topic-by-system scores in `data/` using the name `<collection>_<measure>.csv` (see for instance file [`data/web2012_ap.csv`](/data/web2012_ap.csv)). Then, edit file `src/common.R` to add the new data:
+You can easily run the code with your own test collection. Add the matrix of topic-by-system scores in `data/` using the name `<collection>_<measure>.csv` (see for instance file [`data/robust2004_ap.csv`](/data/robust2004_ap.csv)). Then, edit file `R/common.R` to add the new data:
 
 ```r
-.COLLECTIONS <- c("web2010", "web2011", "web2012", "web2013", "web2014")
-.MEASURES <- c("ap", "ndcg20", "err20", "p10", "p20", "rr")
+.COLLECTIONS <- c("robust2004", "terabyte2006")
+.MEASURES <- c("ap", "ndcg")
 ```
 
-Note that the code will run for all combinations of collection and measure. For more specific modifications, edit the corresponding source file in `src/` (see above). Note also that the script `src/99-paper.R` is only intended to generate the figures in the paper. If you customize something and want a similar analysis, you will need to extend this script yourself.
+Note that the code will run for all combinations of collection and measure. For more specific modifications, edit the corresponding source file in `R/` (see above). Note also that the script `R/99-paper.R` is only intended to generate the figures in the paper. If you customize something and want a similar analysis, you will need to extend this script yourself.
 
 
 ## License
