@@ -2,7 +2,7 @@ This repository contains the data and source code for the following paper:
 
 * J. Urbano, H. Lima and A. Hanjalic, "[A New Perspective on Score Standardization](http://julian-urbano.info/files/publications/077-new-perspective-score-standardization.pdf)", *International ACM SIGIR Conference on Research and Development in Information Retrieval*, 2019.
 
-A [single ZIP file](https://github.com/julian-urbano/sigir2019-standardization/master.zip) can be downloaded as well.
+A [single ZIP file](https://github.com/julian-urbano/sigir2019-standardization/archive/master.zip) can be downloaded as well.
 
 ## Project Structure
 
