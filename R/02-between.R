@@ -1,7 +1,7 @@
 source("R/common.R")
 source("R/std.R")
 
-library(ircor)
+library(ircor) # for tau_b and tauAP_b
 library(rio)
 library(doParallel)
 stopImplicitCluster()
@@ -41,21 +41,22 @@ between_collection <- function(y1, y2) {
 path_out <- "scratch/02-between"
 
 for(batch in 1:.BATCHES) {
-  for(collection in "terabyte2006") {
+  for(collection in .COLLECTIONS) {
     for(measure in .MEASURES) {
       collmea <- paste0(collection, "_", measure)
       path_out_collmea <- file.path(path_out, collmea)
 
+      # Read raw scores
       x <- import(file.path("data", paste0(collmea, ".csv")))
       n_t <- nrow(x)
-      n <- min(floor(n_t / 2), 50)
+      n <- min(floor(n_t / 2), .N_TOPICS)
 
-      for(std in stds) {
+      for(std in stds) { # for each standardizer
         path_out_collmea_std <- file.path(path_out_collmea, std$name)
         dir.create(path_out_collmea_std, recursive = TRUE)
         cat(path_out_collmea_std, "\n")
 
-        # Compute std factors
+        # Compute std scores
         std_f <- std$factors(x)
         y <- std$standardize(std_f, x)
 
@@ -67,7 +68,7 @@ for(batch in 1:.BATCHES) {
           l
         }) %dopar% {
           set.seed(batch*.TRIALS + trial)
-          # sample a subset of n topics
+          # sample two subsets of n topics
           i <- sample(1:n_t, n*2)
           y1_trial <- y[i[1:n],]
           y2_trial <- y[i[-1:-n],]
@@ -75,6 +76,7 @@ for(batch in 1:.BATCHES) {
           between_collection(y1_trial, y2_trial)
         }
 
+        # Save data from each statistic
         for(name in names(res))
           export(round(res[[name]], .SIGNIF), file.path(path_out_collmea_std, paste0(name, ".csv")),
                  append = TRUE)
@@ -86,6 +88,9 @@ for(batch in 1:.BATCHES) {
 stopImplicitCluster()
 
 # Reduce -------------------------------------------------------------------------------------------
+
+# For correlation coefficients we simply save all data from each standardizer.
+# For type 1 errors and power, we compute rates at each alpha level.
 
 path_in <- path_out
 path_out <- "out/02-between"

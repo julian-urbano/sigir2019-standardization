@@ -3,10 +3,13 @@
 .COLLECTIONS <- c("robust2004", "terabyte2006")
 .MEASURES <- c("ap", "ndcg")
 
-.ALPHAS <- c(1:9*1e-3, 1:9*1e-2, .1)
+.ALPHAS <- c(1:9*1e-3, 1:9*1e-2, .1) # significance levels
+.N_TOPICS <- 50 # how many topics to sample
+# Run in .BATCHES batches of .TRIALS trials each.
+# Running only one batch takes too long because data have different structures.
 .BATCHES <- 10
 .TRIALS <- 500
-.SIGNIF <- 6
+.SIGNIF <- 6 # How many decimal digits to save in output files.
 
 # Plots ############################################################################################
 

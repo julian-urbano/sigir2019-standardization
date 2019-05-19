@@ -1,7 +1,7 @@
 source("R/common.R")
 source("R/std.R")
 
-library(ircor)
+library(ircor) # for tau_b and tauAP_b
 library(rio)
 library(doParallel)
 stopImplicitCluster()
@@ -40,16 +40,17 @@ for(batch in 1:.BATCHES) {
       collmea <- paste0(collection, "_", measure)
       path_out_collmea <- file.path(path_out, collmea)
 
+      # Read raw scores
       x <- import(file.path("data", paste0(collmea, ".csv")))
       n_t <- nrow(x)
-      n <- 50
+      n <- .N_TOPICS
 
-      for(std in stds) {
+      for(std in stds) { # for each standardizer
         path_out_collmea_std <- file.path(path_out_collmea, std$name)
         dir.create(path_out_collmea_std, recursive = TRUE)
         cat(path_out_collmea_std, "\n")
 
-        # Compute std factors
+        # Compute std scores
         std_f <- std$factors(x)
         y <- std$standardize(std_f, x)
 
@@ -69,6 +70,7 @@ for(batch in 1:.BATCHES) {
           within_collection(x_trial, y_trial)
         }
 
+        # Save data from each statistic
         for(name in names(res))
           export(round(res[[name]], .SIGNIF), file.path(path_out_collmea_std, paste0(name, ".csv")),
                  append = TRUE)
@@ -80,6 +82,9 @@ for(batch in 1:.BATCHES) {
 stopImplicitCluster()
 
 # Reduce -------------------------------------------------------------------------------------------
+
+# For correlation coefficients we simply save all data from each standardizer.
+# For power, we compute power at each alpha level.
 
 path_in <- path_out
 path_out <- "out/01-within"
