@@ -25,7 +25,7 @@ for(std in list(std_N, std_U, std_E)) {
 
   my.dev.new(file.path(path_out, paste0(tolower(std$name), ".pdf")), num = 3, ratio = .56)
   plot(NA, xlim = 0:1, ylim = 0:1,
-       xlab = "Raw score x", ylab = "Standardized score y", main = "N-std")
+       xlab = "Raw score x", ylab = "Standardized score y", main = std$name)
   for(i in 1:nrow(x)){
     points(sort(x[i,]), sort(y[i,]), col ="#00000077", cex = .4)
     lines(sort(x01[i,]), sort(y01[i,]), type = "l", lty = 2)
