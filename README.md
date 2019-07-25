@@ -49,5 +49,6 @@ When using this archive, please [cite](CITE.bib) the above paper:
       author = {Urbano, Juli\'{a}n and Lima, Harlley and Hanjalic, Alan},
       booktitle = {International ACM SIGIR Conference on Research and Development in Information Retrieval},
       title = {{A New Perspective on Score Standardization}},
-      year = {2019}
+      year = {2019},
+	  pages = {1061--1064}
     }
